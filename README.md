@@ -1,2 +1,2 @@
 # esn-mqtt-sensor-ms
-This repository contains the implementation of the command microservice for the cloud layer of the Edge Sensor Network (ESN).
+This repository contains the implementation of the mqtt sensor microservice for the gateway layer of the Edge Sensor Network (ESN). 
