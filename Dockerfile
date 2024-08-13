@@ -8,4 +8,4 @@ RUN pip install -r /tmp/requirements.txt
 # run backend app
 WORKDIR /app
 EXPOSE $MQTT_SENSOR_MICROSERVICE_PORT
-CMD ./run_service.sh
+CMD python3 run_service.py

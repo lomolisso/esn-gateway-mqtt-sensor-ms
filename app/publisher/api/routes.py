@@ -1,18 +1,21 @@
 from fastapi import HTTPException, status, APIRouter
-import app.api.schemas.command as cmd_schemas
-from app.api.utils import send_cmd_to_devices
-from app.core.config import LATENCY_BENCHMARK
 
+from app.core.config import LATENCY_BENCHMARK
+from app.publisher.api import schemas
+from app.publisher.api import fast_mqtt
+from app.publisher.api.utils import send_cmd_to_devices
+
+# --- Init FastAPI Router ---
+api_router = APIRouter()
 
 # --- API Endpoints ---
-cmd_router = APIRouter()
 
-@cmd_router.post(
+@api_router.post(
     "/sensor/command/set/sensor-state",
     tags=["Edge Sensor Commands"],
     status_code=status.HTTP_202_ACCEPTED,
 )
-async def set_sensor_state(command: cmd_schemas.SetSensorState):
+async def set_sensor_state(command: schemas.SetSensorState):
     """
     SET Sensor State Command
 
@@ -37,19 +40,19 @@ async def set_sensor_state(command: cmd_schemas.SetSensorState):
 
     Note that devices DO NOT publish a response for SET commands.
     """
-    cmd_uuids = send_cmd_to_devices(command)
+    cmd_uuids = send_cmd_to_devices(fast_mqtt, command)
     return {
         "message": "SET Sensor State Command sent to devices",
         "command_uuids": cmd_uuids
     }
 
 
-@cmd_router.post(
+@api_router.post(
     "/sensor/command/get/sensor-state",
     tags=["Edge Sensor Commands"],
     status_code=status.HTTP_202_ACCEPTED,
 )
-async def get_sensor_state(command: cmd_schemas.GetSensorState):
+async def get_sensor_state(command: schemas.GetSensorState):
     """
     GET Sensor State Command
 
@@ -58,19 +61,19 @@ async def get_sensor_state(command: cmd_schemas.GetSensorState):
     Note that devices DO publish a response for GET commands. Each response will be catched by the device handler
     and sent to the Gateway API for further processing.
     """
-    cmd_uuids = send_cmd_to_devices(command)
+    cmd_uuids = send_cmd_to_devices(fast_mqtt, command)
     return {
         "message": "GET Sensor State Command sent to devices",
         "command_uuids": cmd_uuids
     }
 
 
-@cmd_router.post(
+@api_router.post(
     "/sensor/command/set/sensor-config",
     tags=["Edge Sensor Commands"],
     status_code=status.HTTP_202_ACCEPTED,
 )
-async def set_sensor_config(command: cmd_schemas.SetSensorConfig):
+async def set_sensor_config(command: schemas.SetSensorConfig):
     """
     SET Sensor Config Command
 
@@ -80,19 +83,19 @@ async def set_sensor_config(command: cmd_schemas.SetSensorConfig):
 
     Note that devices DO NOT publish a response for SET commands.
     """
-    cmd_uuids = send_cmd_to_devices(command)
+    cmd_uuids = send_cmd_to_devices(fast_mqtt, command)
     return {
         "message": "SET Sensor Config Command sent to devices",
         "command_uuids": cmd_uuids
     }
     
 
-@cmd_router.post(
+@api_router.post(
     "/sensor/command/get/sensor-config",
     tags=["Edge Sensor Commands"],
     status_code=status.HTTP_202_ACCEPTED,
 )
-async def get_sensor_config(command: cmd_schemas.GetSensorConfig):
+async def get_sensor_config(command: schemas.GetSensorConfig):
     """
     GET Sensor Config Command
 
@@ -101,19 +104,19 @@ async def get_sensor_config(command: cmd_schemas.GetSensorConfig):
     Note that devices DO publish a response for GET commands. Each response will be catched by the device handler
     and sent to the Gateway API for further processing.
     """
-    cmd_uuids = send_cmd_to_devices(command)
+    cmd_uuids = send_cmd_to_devices(fast_mqtt, command)
     return {
         "message": "GET Sensor Config Command sent to devices",
         "command_uuids": cmd_uuids,
     }
 
 
-@cmd_router.post(
+@api_router.post(
     "/sensor/command/set/inference-layer",
     tags=["Edge Sensor Commands"],
     status_code=status.HTTP_202_ACCEPTED,
 )
-async def set_sensor_inference_layer(command: cmd_schemas.SetInferenceLayer):
+async def set_sensor_inference_layer(command: schemas.SetInferenceLayer):
     """
     SET Sensor Inference Layer Command
 
@@ -122,18 +125,18 @@ async def set_sensor_inference_layer(command: cmd_schemas.SetInferenceLayer):
 
     Note that devices DO NOT publish a response for SET commands.
     """
-    cmd_uuids = send_cmd_to_devices(command)
+    cmd_uuids = send_cmd_to_devices(fast_mqtt, command)
     return {
         "message": "SET Sensor Inference Layer Command sent to devices",
         "command_uuids": cmd_uuids
     }
 
-@cmd_router.post(
+@api_router.post(
     "/sensor/command/get/inference-layer",
     tags=["Edge Sensor Commands"],
     status_code=status.HTTP_202_ACCEPTED,
 )
-async def get_sensor_inference_layer(command: cmd_schemas.GetInferenceLayer):
+async def get_sensor_inference_layer(command: schemas.GetInferenceLayer):
     """
     GET Sensor Inference Layer Command
 
@@ -142,19 +145,19 @@ async def get_sensor_inference_layer(command: cmd_schemas.GetInferenceLayer):
     Note that devices DO publish a response for GET commands. Each response will be catched by the device handler
     and sent to the Gateway API for further processing.
     """
-    cmd_uuids = send_cmd_to_devices(command)
+    cmd_uuids = send_cmd_to_devices(fast_mqtt, command)
     return {
         "message": "GET Sensor Inference Layer Command sent to devices",
         "command_uuids": cmd_uuids
     }
 
 
-@cmd_router.post(
+@api_router.post(
     "/sensor/command/set/sensor-model",
     tags=["Edge Sensor Commands"],
     status_code=status.HTTP_202_ACCEPTED,
 )
-async def set_sensor_model(command: cmd_schemas.SetSensorModel):
+async def set_sensor_model(command: schemas.SetSensorModel):
     """
     SET Sensor Model Command
 
@@ -163,20 +166,20 @@ async def set_sensor_model(command: cmd_schemas.SetSensorModel):
     is the base64 encoded bytes of the compressed model using GZIP, while the second attribute is the size
     of the uncompressed model in bytes.
     """
-    cmd_uuids = send_cmd_to_devices(command)
+    cmd_uuids = send_cmd_to_devices(fast_mqtt, command)
     return {
         "message": "Upload Sensor Model Command Sent to Devices",
         "command_uuids": cmd_uuids
     }
 
 
-@cmd_router.post(
+@api_router.post(
     "/sensor/command/set/inf-latency-bench",
     tags=["Edge Sensor Commands"],
     status_code=status.HTTP_202_ACCEPTED,
 )
 async def inference_latency_benchmark(
-    command: cmd_schemas.InferenceLatencyBenchmarkCommand,
+    command: schemas.InferenceLatencyBenchmarkCommand,
 ):
     """
     Inference Latency Benchmark Command
@@ -191,7 +194,7 @@ async def inference_latency_benchmark(
     send an Export message containing the payload sent in this command plus the timestamp at which the Export was sent. 
     """
     if LATENCY_BENCHMARK:
-        cmd_uuids = send_cmd_to_devices(command)
+        cmd_uuids = send_cmd_to_devices(fast_mqtt, command)
         return {
             "message": "Inference Latency Benchmark Command Sent to Devices",
             "command_uuids": cmd_uuids,

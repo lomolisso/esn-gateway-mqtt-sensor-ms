@@ -5,8 +5,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 SECRET_KEY: str = os.environ.get("SECRET_KEY")
-MQTT_SENSOR_MICROSERVICE_HOST = os.environ.get("MQTT_SENSOR_MICROSERVICE_HOST")
-MQTT_SENSOR_MICROSERVICE_PORT = os.environ.get("MQTT_SENSOR_MICROSERVICE_PORT")
+MQTT_SENSOR_MICROSERVICE_HOST: str = os.environ.get("MQTT_SENSOR_MICROSERVICE_HOST")
+MQTT_SENSOR_MICROSERVICE_PORT: int = int(os.environ.get("MQTT_SENSOR_MICROSERVICE_PORT", "8008"))
 
 CLOUD_INFERENCE_LAYER = 2
 GATEWAY_INFERENCE_LAYER = 1
@@ -22,8 +22,8 @@ MQTT_SUBSCRIBER_CLIENT_ID: str = os.environ.get("MQTT_SUBSCRIBER_CLIENT_ID", "mq
 DEVICE_EXPORT_TOPIC: str = os.environ.get("DEVICE_EXPORT_TOPIC", "export/#")
 DEVICE_RESPONSE_TOPIC: str = os.environ.get("DEVICE_RESPONSE_TOPIC", "response/#")
 
-# cmd_topic : command/<device_name>/<resource_name>/<method>/<uuid>
-# response_topic : response/<device_name>/<resource_name>/<uuid>
+# cmd_topic : command/<device_name>/<property_name>/<method>/<uuid>
+# response_topic : response/<device_name>/<property_name>/<uuid>
 DEVICE_CMD_TOPIC_TEMPLATE: str = os.environ.get("DEVICE_CMD_TOPIC_TEMPLATE", "command/%s/%s/%s/%s")
 
 GATEWAY_API_URL: str = os.environ.get("GATEWAY_API_URL")
