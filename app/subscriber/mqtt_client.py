@@ -1,4 +1,3 @@
-import threading
 import logging
 import paho.mqtt.client as mqtt
 from app.core.config import (
@@ -7,6 +6,10 @@ from app.core.config import (
 )
 from app.subscriber.export import export_handler
 from app.subscriber.response import response_handler
+from concurrent.futures import ThreadPoolExecutor
+
+# Create a thread pool with a maximum number of threads
+pool = ThreadPoolExecutor(max_workers=5)
 
 logging.basicConfig(level=logging.INFO)
 
@@ -20,10 +23,11 @@ def on_connect(client, userdata, flags, rc):
 
 def on_message(client, userdata, msg):
     logging.info(f"[MQTT Subscriber] Received message on topic {msg.topic}")
+    
     if msg.topic.startswith(DEVICE_EXPORT_TOPIC[:-1]): # removes the wildcard
-        threading.Thread(target=export_handler.handle, args=(msg.topic, msg.payload)).start()
+        pool.submit(export_handler.handle, msg.topic, msg.payload)
     elif msg.topic.startswith(DEVICE_RESPONSE_TOPIC[:-1]): # removes the wildcard
-        threading.Thread(target=response_handler.handle, args=(msg.topic, msg.payload)).start()
+        pool.submit(response_handler.handle, msg.topic, msg.payload)
     else:
         logging.info(f"[MQTT Subscriber] Unknown topic {msg.topic}")
 
