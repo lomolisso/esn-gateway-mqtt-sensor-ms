@@ -106,7 +106,7 @@ class SetSensorModel(SensorModelCommand):
 class InferenceLatencyBenchmark(BaseModel):
     sensor_name: str
     inference_layer: InferenceLayer
-    send_timestamp: int
+    send_timestamp: Optional[int] = None
 
 
 class InferenceLatencyBenchmarkCommand(BaseCommand):
