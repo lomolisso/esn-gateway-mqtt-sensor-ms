@@ -31,7 +31,6 @@ class ExportHandler:
         # Step 2: Export Inference Latency Benchmark to Gateway API if inference_layer == SENSOR_INFERENCE_LAYER
         _inference_layer = payload.inference_descriptor.inference_layer
         if _inference_layer == SENSOR_INFERENCE_LAYER:
-            assert payload.inference_descriptor.recv_timestamp is not None
             assert payload.inference_descriptor.prediction is not None
 
             send_timestamp = payload.inference_descriptor.send_timestamp
