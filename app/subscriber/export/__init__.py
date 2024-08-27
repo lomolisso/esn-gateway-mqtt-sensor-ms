@@ -28,6 +28,7 @@ class ExportHandler:
         )
         post_to_gateway_api("/export/sensor-data", sensor_data.model_dump())
 
+        """
         # Step 2: Export Inference Latency Benchmark to Gateway API if inference_layer == SENSOR_INFERENCE_LAYER
         _inference_layer = payload.inference_descriptor.inference_layer
         if _inference_layer == SENSOR_INFERENCE_LAYER:
@@ -48,7 +49,8 @@ class ExportHandler:
                 )
             )
             post_to_gateway_api("/export/inference-latency-benchmark", inference_latency_benchmark.model_dump())            
-
+        """
+        
     def _handle_mqtt_inference_latency_benchmark(self, device_name: str, payload: schemas.InferenceLatencyBenchmark):
         """
         This method handles the MQTT inference-latency-benchmark export message.
