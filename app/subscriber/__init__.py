@@ -1,5 +1,6 @@
 import threading
 import logging
+import zlib
 import paho.mqtt.client as mqtt
 from app.core.config import (
     DEVICE_EXPORT_TOPIC,
